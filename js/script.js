@@ -2,24 +2,37 @@
 function winner(playerThatWon){
 	let gameDiv = document.getElementById('board');
 	gameDiv.style.display = 'none';
-
-	winnerHTML = `
-			<div class="screen screen-win" id="finish">
-			  <header>
-			    <h1>Tic Tac Toe</h1>
-			    <p class="message">${playerThatWon} wins!</p>
-			    <a href="#" class="button">New game</a>
-			  </header>
-			</div>`;
-	body = document.querySelector('body');
-	body.innerHTML = winnerHTML;
-	whichColor = document.querySelector('#finish');
-	if (playerThatWon == 'player1'){
+	
+	let HTML = `
+		<div class="screen screen-win" id="finish">
+		  <header>
+		    <h1>Tic Tac Toe</h1>
+		    <p class="message">${playerThatWon}</p>
+		    <a href="#" class="button">New game</a>
+		  </header>
+		</div>`;
+	
+	
+	let body = document.querySelector('body');
+	body.innerHTML = HTML;
+	let whichColor = document.querySelector('#finish');
+	if (playerThatWon == 'player1 wins!'){
 		whichColor.classList.add('screen-win-one');
-	}else{
+	}else if (playerThatWon == 'player2 wins!'){
 		whichColor.classList.add('screen-win-two');
+	}else if (playerThatWon == 'tie!'){
+		whichColor.classList.add('screen-win-tie');
 	}
 	
+	// for when the winner page appears, click for new game.
+	let header = document.querySelector('header');
+	header.addEventListener('click', function(event) {
+		// ###### keep an eye on this function.
+		if (event.target.tagName == "A"){
+			gamePage();
+		}
+		
+	});
 
 }
 
@@ -40,6 +53,22 @@ function checkIfWon() {
 	box8 = document.getElementById('8');
 	box9 = document.getElementById('9');
 
+	// this is to see if they tied at the
+	// end of this upcoming if else statement
+	let boxes1 = document.querySelectorAll('.box-filled-2')
+	let boxes2 = document.querySelectorAll('.box-filled-1')
+	if (boxes1){
+		boxes1 = boxes1.length;
+	}else{
+		boxes1 = 0;
+	}
+	if (boxes2){
+		boxes2 = boxes2.length;
+	}else{
+		boxes2 = 0;
+	}
+	totalBoxes = boxes1 + boxes2;
+	console.log('boxes total: ' + totalBoxes);
 	//straight boxes 1,2,3
 	if (box1.classList.contains('box-filled-1') &&
 	 box2.classList.contains('box-filled-1') &&
@@ -117,6 +146,8 @@ function checkIfWon() {
 	 box5.classList.contains('box-filled-2') &&
 	  box7.classList.contains('box-filled-2')){
 		return true;
+	}else if (totalBoxes == 9){
+		return "tie";
 	}else{
 		return false;
 	}
@@ -127,8 +158,7 @@ function checkIfWon() {
 
 function gamePage() {
 	let body = document.querySelector('body');
-	startDiv = document.querySelector('#start');
-	startDiv.style.display = 'none';
+	
 
 	document.querySelector('body').innerHTML = `
 		<div class="board" id="board">
@@ -192,8 +222,11 @@ function gamePage() {
 				player1.classList.remove('active');
 				player2 = document.querySelector('#player2');
 				player2.classList.add('active');
-				if (checkIfWon()){
-					winner('player1');
+				if (checkIfWon() == "tie"){
+					winner('tie!');
+				}
+				else if (checkIfWon()){
+					winner('player1 wins!');
 				}
 			}else{
 				event.target.classList.add('box-filled-2');
@@ -201,8 +234,11 @@ function gamePage() {
 				player1.classList.add('active');
 				player2 = document.querySelector('#player2');
 				player2.classList.remove('active');
-				if (checkIfWon()){
-					winner('player2');
+				if (checkIfWon() == "tie"){
+					winner('tie!');
+				}
+				else if (checkIfWon()){
+					winner('player2 wins!');
 				}
 			}
 		}
@@ -210,12 +246,7 @@ function gamePage() {
 	});
 	// ******end of event listener 'click'
 
-	// for when the winner page appears, click for new game.
-	let startButton = document.querySelector('.button');
-	startButton.addEventListener('click', function() {
-		// ###### keep an eye on this function.
-		gamePage();
-	});
+
 };
 
 
