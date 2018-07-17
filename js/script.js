@@ -8,7 +8,8 @@ function winner(playerThatWon, message){
 		  <header>
 		    <h1>Tic Tac Toe</h1>
 		    <p class="message">${message}</p>
-		    <a href="#" class="button">New game</a>
+		    <a href="#" class="button single">Single Player</a>
+		    <a href="#" class="button multi">Multiplayer</a>
 		  </header>
 		</div>`;
 	
@@ -28,12 +29,12 @@ function winner(playerThatWon, message){
 	let header = document.querySelector('header');
 	header.addEventListener('click', function(event) {
 		// ###### keep an eye on this function.
-		if (event.target.tagName == "A"){
+		if (event.target.classList.contains('single')){
+			gamePage("computer");
+		}else if (event.target.classList.contains('multi')){
 			gamePage();
-		}
-		
+		}	
 	});
-
 }
 
 
@@ -155,16 +156,45 @@ function checkIfWon() {
 	
 }
 
+function computerTurn() {
 
-function gamePage() {
+	let allBoxes = document.querySelectorAll('.box');
+	let availableBoxes = [];
+	for (let i=0; i<allBoxes.length; i++){
+		if (!allBoxes[i].classList.contains('box-filled-2')){
+			if (!allBoxes[i].classList.contains('box-filled-1')){
+				availableBoxes.push(allBoxes[i]);
+			}
+		}
+	}
+	console.log("Available boxes: " + availableBoxes.length);
+	let indexChoice = Math.floor(Math.random() * availableBoxes.length);
+
+	availableBoxes[indexChoice].classList.add('box-filled-2');
+
+	player1 = document.querySelector('#player1');
+	player1.classList.add('active');
+	player2 = document.querySelector('#player2');
+	player2.classList.remove('active');
+	
+					
+}
+
+function gamePage(isSinglePlayer=null) {
 	let player1Name = prompt("Enter player one's name: ");
 	if (!player1Name){
 		player1Name = "Player One";
 	}
-	let player2Name = prompt("Enter player two's name: ");
-	if (!player2Name){
-		player2Name = "Player Two";
+	let player2Name
+	if (isSinglePlayer == "computer"){
+		player2Name = "computer";
+	}else{
+		player2Name = prompt("Enter player two's name: ");
+		if (!player2Name){
+			player2Name = "Player Two";
+		}
 	}
+	
 	let body = document.querySelector('body');
 	
 
@@ -222,40 +252,70 @@ function gamePage() {
 	// ****** end of event listener mouseover/mouseout
 
 
-	// ******event listener 'click'
-	choices = document.querySelector('.boxes');
-	choices.addEventListener("click", function(event){
-		if (event.target.tagName == "LI" && !event.target.classList.contains('box-filled-1') && !event.target.classList.contains('box-filled-2')){
-			if (document.querySelector('#player1').classList.contains('active')){
-				event.target.classList.add('box-filled-1');
-				player1 = document.querySelector('#player1');
-				player1.classList.remove('active');
-				player2 = document.querySelector('#player2');
-				player2.classList.add('active');
-				if (checkIfWon() == "tie"){
-					winner('tie!', 'Game was a tie!');
-				}
-				else if (checkIfWon()){
-					winner('player1 wins!',player1Name + " wins!");
-				}
-			}else{
-				event.target.classList.add('box-filled-2');
-				player1 = document.querySelector('#player1');
-				player1.classList.add('active');
-				player2 = document.querySelector('#player2');
-				player2.classList.remove('active');
-				if (checkIfWon() == "tie"){
-					winner('tie!', 'Game was a tie!');
-				}
-				else if (checkIfWon()){
-					winner('player2 wins!', player2Name + " wins!");
+	if (player2Name != "computer"){
+
+	// ******event listener 'click', choose box
+		choices = document.querySelector('.boxes');
+		choices.addEventListener("click", function(event){
+			if (event.target.tagName == "LI" && !event.target.classList.contains('box-filled-1') && !event.target.classList.contains('box-filled-2')){
+				if (document.querySelector('#player1').classList.contains('active')){
+					event.target.classList.add('box-filled-1');
+					player1 = document.querySelector('#player1');
+					player1.classList.remove('active');
+					player2 = document.querySelector('#player2');
+					player2.classList.add('active');
+					if (checkIfWon() == "tie"){
+						winner('tie!', 'Game was a tie!');
+					}
+					else if (checkIfWon()){
+						winner('player1 wins!',player1Name + " wins!");
+					}
+				}else{
+					event.target.classList.add('box-filled-2');
+					player1 = document.querySelector('#player1');
+					player1.classList.add('active');
+					player2 = document.querySelector('#player2');
+					player2.classList.remove('active');
+					if (checkIfWon() == "tie"){
+						winner('tie!', 'Game was a tie!');
+					}
+					else if (checkIfWon()){
+						winner('player2 wins!', player2Name + " wins!");
+					}
 				}
 			}
-		}
 
-	});
-	// ******end of event listener 'click'
+		});
+	// ******end of event listener 'click', choose box.
+	}else{
+		choices = document.querySelector('.boxes');
+		choices.addEventListener("click", function(event){
+			if (event.target.tagName == "LI" && !event.target.classList.contains('box-filled-1') && !event.target.classList.contains('box-filled-2')){
+				if (document.querySelector('#player1').classList.contains('active')){
+					event.target.classList.add('box-filled-1');
+					player1 = document.querySelector('#player1');
+					player1.classList.remove('active');
+					player2 = document.querySelector('#player2');
+					player2.classList.add('active');
+					if (checkIfWon() == "tie"){
+						winner('tie!', 'Game was a tie!');
+					}
+					else if (checkIfWon()){
+						winner('player1 wins!',player1Name + " wins!");
+					}else{
+						computerTurn();
+						if (checkIfWon() == "tie"){
+							winner('tie!', 'Game was a tie!');
+						}
+						else if (checkIfWon()){
+							winner('player2 wins!', player2Name + " wins!");
+						}
+					}
+			}
+			}
 
+		});
+	}
 
 };
 
@@ -270,16 +330,24 @@ function startPage(){
 			<div class="screen screen-start" id="start">
 			  <header>
 			    <h1>Tic Tac Toe</h1>
-			    <a href="#" class="button">Start game</a>
+			    <a href="#" class="button single">Single Player</a>
+			    <a href="#" class="button multi">Multiplayer</a>
 			  </header>
 			</div>`;
 
 	body.innerHTML = startHTML;
 
-	let startButton = document.querySelector('.button');
-	startButton.addEventListener('click', function() {
-		// ###### keep an eye on this function.
-		gamePage();
+	// the two buttons on the start page for single/multi
+	let header = document.querySelector('header');
+	header.addEventListener('click', function(event) {
+		if (event.target.tagName == "A"){
+			if (event.target.classList.contains('single')){
+				gamePage("computer");
+			}else if (event.target.classList.contains('multi')){
+				gamePage();
+			}
+			
+		}
 	});
 
 };
