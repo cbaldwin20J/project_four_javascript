@@ -2,12 +2,12 @@
 // if there is a winner or a tie, then this will
 // display the html page for it
 function winner(playerThatWon, message){
-	let gameDiv = document.getElementById('board');
+	const gameDiv = document.getElementById('board');
 	// get rid of previous screen
 	gameDiv.style.display = 'none';
 	
 	// replace with this new screen
-	let HTML = `
+	const HTML = `
 		<div class="screen screen-win" id="finish">
 		  <header>
 		    <h1>Tic Tac Toe</h1>
@@ -19,9 +19,9 @@ function winner(playerThatWon, message){
 	
 	// determining what color to use depending on
 	// who won or tie by adding a class.
-	let body = document.querySelector('body');
+	const body = document.querySelector('body');
 	body.innerHTML = HTML;
-	let whichColor = document.querySelector('#finish');
+	const whichColor = document.querySelector('#finish');
 	if (playerThatWon == 'player1 wins!'){
 		whichColor.classList.add('screen-win-one');
 	}else if (playerThatWon == 'player2 wins!'){
@@ -31,7 +31,7 @@ function winner(playerThatWon, message){
 	}
 	
 	// for when the winner page appears, click for new game.
-	let header = document.querySelector('header');
+	const header = document.querySelector('header');
 	header.addEventListener('click', function(event) {
 		if (event.target.classList.contains('single')){
 			gamePage("computer");
@@ -160,8 +160,8 @@ function checkIfWon() {
 // if single player, this will go for the computer
 // opponent
 function computerTurn() {
-	let allBoxes = document.querySelectorAll('.box');
-	let availableBoxes = [];
+	const allBoxes = document.querySelectorAll('.box');
+	const availableBoxes = [];
 	// get the boxes that are empty.
 	for (let i=0; i<allBoxes.length; i++){
 		if (!allBoxes[i].classList.contains('box-filled-2')){
@@ -171,7 +171,7 @@ function computerTurn() {
 		}
 	}
 
-	let indexChoice = Math.floor(Math.random() * availableBoxes.length);
+	const indexChoice = Math.floor(Math.random() * availableBoxes.length);
 	// random box that computer picked.
 	availableBoxes[indexChoice].classList.add('box-filled-2');
 
@@ -202,7 +202,7 @@ function gamePage(isSinglePlayer=null) {
 		}
 	}
 	
-	let body = document.querySelector('body');
+	const body = document.querySelector('body');
 	
 	// the html of the main game.
 	document.querySelector('body').innerHTML = `
@@ -238,7 +238,7 @@ function gamePage(isSinglePlayer=null) {
 	player1First.classList.add('active');
 
 	// ******event listener mouseover/mouseout for boxes
-	choices = document.querySelector('.boxes');
+	let choices = document.querySelector('.boxes');
 	choices.addEventListener("mouseover", function(event){
 		// if 'LI' already was chosen then don't change.
 		if (event.target.tagName == "LI" && !event.target.classList.contains('box-filled-1') && !event.target.classList.contains('box-filled-2')){
@@ -338,13 +338,13 @@ function gamePage(isSinglePlayer=null) {
 // to the game page once a button is clicked.
 function startPage(){
 	// if previous page, then get rid of it
-	let gameDiv = document.getElementById('board');
+	const gameDiv = document.getElementById('board');
 	gameDiv.style.display = 'none';
 
-	let body = document.querySelector('body');
+	const body = document.querySelector('body');
 
 	// start page's html.
-	let startHTML = `
+	const startHTML = `
 			<div class="screen screen-start" id="start">
 			  <header>
 			    <h1>Tic Tac Toe</h1>
@@ -356,7 +356,7 @@ function startPage(){
 	body.innerHTML = startHTML;
 
 	// the two buttons on the start page for single/multiplayer
-	let header = document.querySelector('header');
+	const header = document.querySelector('header');
 	header.addEventListener('click', function(event) {
 		if (event.target.tagName == "A"){
 			if (event.target.classList.contains('single')){
